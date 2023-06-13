@@ -1,0 +1,151 @@
+#include <Servo.h>
+
+// C++ code
+
+//
+
+#define sensorLuzPin A5 
+
+int LEDR = 8;
+
+int LEDA = 7;
+
+int LEDV = 6;
+
+int TRIGG = 10;
+
+int ECHO = 9;
+
+int sensorHumedad = A4;
+
+int lectura = 0;
+
+int humedad = 0;
+
+int alarma = 3;
+
+Servo servoMotor;
+
+void setup() {
+
+     
+
+pinMode(alarma, OUTPUT);
+
+Serial.begin(9600); 
+
+pinMode(TRIGG, OUTPUT);
+
+pinMode(ECHO, INPUT);
+
+ pinMode(LEDR, OUTPUT);
+
+  pinMode(LEDA, OUTPUT);
+
+  pinMode(LEDV, OUTPUT);
+
+  digitalWrite(LEDR, LOW);
+
+  digitalWrite(LEDA, LOW);
+
+  digitalWrite(LEDV, LOW);
+
+digitalWrite(TRIGG, LOW);
+
+servoMotor.attach(11);
+
+}
+
+void loop() {
+
+ 
+
+ lectura = analogRead(sensorHumedad); 
+
+ humedad = map(lectura, 0, 880, 0, 100);
+
+ 
+
+ long t;
+
+ long d;
+
+ digitalWrite(TRIGG, HIGH);
+
+ delayMicroseconds(10);
+
+ digitalWrite(TRIGG, LOW);
+
+ 
+
+ 
+
+ t = pulseIn(ECHO, HIGH);
+
+ d = t/59;
+
+ Serial.print("Distancia: ");
+
+ Serial.print(d);      
+
+ Serial.print("cm");
+
+ Serial.println();
+
+  int valorLuz = analogRead(sensorLuzPin); 
+
+ 
+
+  
+
+  
+
+    
+
+  
+
+  Serial.print("\n");
+
+  Serial.print("Nivel de luz "); 
+
+  Serial.println(valorLuz); 
+
+  delayMicroseconds(3000);
+
+  
+
+  if(valorLuz < 500){
+
+    
+
+    digitalWrite(LEDR, LOW);
+
+  }else{
+
+    digitalWrite(LEDR, HIGH);
+
+   
+
+  
+
+  }if(d < 15){
+
+    servoMotor.write(180);
+
+    delayMicroseconds(1000);
+
+  }else{
+
+    servoMotor.write(-180);
+
+  }if (humedad < 50) {
+
+   digitalWrite(alarma, HIGH);
+
+ } else {
+
+   digitalWrite(alarma, LOW);
+
+ }
+
+  }
